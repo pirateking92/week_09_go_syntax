@@ -17,7 +17,7 @@ func reverseString(s string) string {
 func palindromeCheck(word string) bool {
 	fmt.Println("Enter 1 word for palicheck:")
 	fmt.Scanln(&word)
-	nonLetterRegex := regexp.Compile(`[^a-zA-Z]`)
+	nonLetterRegex := regexp.MustCompile(`[^a-zA-Z]`)
 	cleanedWord := nonLetterRegex.ReplaceAllString(word, "")
 	lowerWord := strings.ToLower(cleanedWord)
 	reversedWord := reverseString(lowerWord)
