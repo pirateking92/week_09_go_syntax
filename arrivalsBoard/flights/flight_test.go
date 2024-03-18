@@ -2,6 +2,7 @@ package flights
 
 import (
 	"fmt"
+	"go_arrivals/flights"
 	"go_arrivals/test_utils"
 	"testing"
 	"time"
@@ -31,7 +32,7 @@ func TestOutput(t *testing.T) {
 // //	}
 
 func TestToStringUtil(t *testing.T) {
-	flight := Flight{
+	flight := flights.Flight{
 		DueTime: time.Date(2024, time.April, 1, 14, 0, 0, 0, time.UTC),
 		Origin:  "London",
 		Code:    "BA 114",

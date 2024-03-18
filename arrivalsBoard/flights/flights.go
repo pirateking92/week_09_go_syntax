@@ -29,24 +29,6 @@ func (f flight) ToString() string {
 }
 
 // Define a type alias for the slice of flight structs
+// this will link calls outside of this package
+// to this, which then links to the flight struct
 type Flights []flight
-
-type board struct {
-	Flights []flight
-}
-
-func NewBoard(flights []flight) board {
-	return board{
-		Flights: flights,
-	}
-}
-
-func (b board) Display() string {
-	var result string
-	result += "Time From Code\n"
-	for _, f := range b.Flights {
-		formattedTime := f.DueTime.Format("15:04")
-		result += fmt.Sprintf("%s %s %s\n", formattedTime, f.Origin, f.Code)
-	}
-	return result
-}

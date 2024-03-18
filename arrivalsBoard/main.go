@@ -2,40 +2,58 @@ package main
 
 import (
 	"fmt"
-	"go_arrivals/flights"
-	"time"
+
+	"go_arrivals/json"
 
 	"github.com/rodaine/table"
 )
 
+func center(s string, w int) string {
+	return fmt.Sprintf("%[1]*s", -w, fmt.Sprintf("%[1]*s", (w+len(s))/2, s))
+}
+
 func main() {
-	fmt.Println("Soon to be Arrivals!!")
+	fmt.Println(">>>", center("MattPort", 20), "<<<")
 
-	flight1 := flights.NewFlight("JA123", "Vancouver", time.Now())
+	// flight1 := flights.NewFlight("JA123", "Vancouver", time.Now())
 
-	flight2 := flights.NewFlight("Ma77", "Tokyo", time.Date(2023, time.April, 1, 16, 0, 0, 0, time.UTC))
+	// flight2 := flights.NewFlight("Ma77", "Tokyo", time.Date(2023, time.April, 1, 16, 0, 0, 0, time.UTC))
 
-	flight3 := flights.NewFlight("JA 123", "Kyoto", time.Date(2023, time.April, 1, 12, 0, 0, 0, time.UTC))
+	// flight3 := flights.NewFlight("JA 123", "Kyoto", time.Date(2023, time.April, 1, 12, 0, 0, 0, time.UTC))
 
-	fmt.Println(flight1.ToString())
-	fmt.Println(flight2.ToString())
-	fmt.Println(flight3.ToString())
+	// fmt.Println(flight1.ToString())
+	// fmt.Println(flight2.ToString())
+	// fmt.Println(flight3.ToString())
 
-	// create a flight slice
-	flightSlice := flights.Flights{flight1, flight2, flight3}
+	// // create a flight slice
+	// flightSlice := flights.Flights{flight1, flight2, flight3}
 
-	// creating a board instance that can be used by main
+	// // creating a board instance that can be used by main
 
-	myBoard := flights.NewBoard(flightSlice)
-	fmt.Println(myBoard.Display())
+	// myBoard := board.NewBoard(flightSlice)
+	// fmt.Println(myBoard.Display())
 
+	// SETTING UP THE TABLE WITH THE COLUMNS WANTED
 	tbl := table.New("Code", "Origin", "Time")
 
-	for _, f := range myBoard.Flights {
+	// for _, f := range myBoard.Flights {
+	// 	formattedTime := f.DueTime.Format("15:04")
+	// 	tbl.AddRow(f.Code, f.Origin, formattedTime)
+	// }
+
+	// tbl.Print()
+
+	fmt.Println("\nArriving Flights:\n")
+
+	flts, err := json.ReadFromJSON("flightData.json")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	for _, f := range flts {
 		formattedTime := f.DueTime.Format("15:04")
 		tbl.AddRow(f.Code, f.Origin, formattedTime)
 	}
-
 	tbl.Print()
-	// flights.HelloWorld()
 }
