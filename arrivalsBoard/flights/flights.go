@@ -54,12 +54,12 @@ func NewFlight(code, origin string, dueTime, arrived, expectedAt time.Time, canc
 // 	}
 // }
 
-// func (f flight) ToString() string {
-// 	formattedDueTime := f.DueTime.Format("15:04")
-// 	formattedArrival := f.Arrived.Format("15:04")
-// 	formattedExpectedAt := f.ExpectedAt.Format("15:04")
-// 	return fmt.Sprintf(("Flight %s from %s is expected at %s"), f.Code, f.Origin, formattedDueTime, formattedArrival, formattedExpectedAt, f.Cancelled)
-// }
+func (f flight) ToString(flight) string {
+	formattedDueTime := f.DueTime.Format("15:04")
+	formattedArrival := f.Arrived.Format("15:04")
+	formattedExpectedAt := f.ExpectedAt.Format("15:04")
+	return fmt.Sprintf(("Flight %s from %s is expected at %s"), f.Code, f.Origin, formattedDueTime, formattedArrival, formattedExpectedAt, f.Cancelled)
+}
 
 // Define a type alias for the slice of flight structs
 // this will link calls outside of this package

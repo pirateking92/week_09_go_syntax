@@ -1,9 +1,19 @@
 package board
 
 import (
+	"bytes"
 	"fmt"
 	"go_arrivals/flights"
+
+	"go_arrivals/json"
+
+	"github.com/fatih/color"
+	"github.com/rodaine/table"
 )
+
+func center(s string, w int) string {
+	return fmt.Sprintf("%[1]*s", -w, fmt.Sprintf("%[1]*s", (w+len(s))/2, s))
+}
 
 type board struct {
 	Flights flights.Flights
@@ -23,39 +33,58 @@ func (b board) Display() string {
 		formattedArrival := f.Arrived.Format("15:04")
 		formattedExpectedAt := f.ExpectedAt.Format("15:04")
 		if f.Cancelled {
-			result += fmt.Sprintf("%s %s %s cancelled\n", formattedDueTime, f.Origin, f.Code)
+			result += fmt.Sprintf("%s %s %s %s\n", formattedDueTime, f.Origin, f.Code, color.RedString("Cancelled"))
 		} else if f.Arrived.IsZero() {
-			result += fmt.Sprintf("%s %s %s expected %s\n", formattedDueTime, f.Origin, f.Code, formattedExpectedAt)
+			result += fmt.Sprintf("%s %s %s %s %s\n", formattedDueTime, f.Origin, f.Code, color.GreenString("Expected"), formattedExpectedAt)
 		} else {
-			result += fmt.Sprintf("%s %s %s landed %s\n", formattedDueTime, f.Origin, f.Code, formattedArrival)
+			result += fmt.Sprintf("%s %s %s %s %s\n", formattedDueTime, f.Origin, f.Code, color.YellowString("Landed"), formattedArrival)
 		}
 	}
 	return result
 }
 
-// func Board() string {
-// 	flts, err := json.ReadFromJSON("flightData.json")
-// 	if err != nil {
-// 		fmt.Println("Error:", err)
-// 		return ""
-// 	}
-// 	// SETTING UP THE TABLE WITH THE COLUMNS WANTED
-// 	tbl := table.New("Code", "Origin", "Time", "Arrived", "Expected", "Cancelled")
+func (b board) Board() string {
 
-// 	for _, f := range flts {
-// 		formattedTime := f.DueTime.Format("15:04")
-// 		var formattedArrival, formattedExpectedAt string
-// 		if !f.Arrived.IsZero() {
-// 			formattedArrival = f.Arrived.Format("15:04")
-// 		}
+	// SETTING UP THE TABLE WITH THE COLUMNS WANTED
+	tbl := table.New("Code", "Origin", "Time", "Arrived", "Expected", "Cancelled")
 
-// 		if !f.ExpectedAt.IsZero() {
-// 			formattedExpectedAt = f.ExpectedAt.Format("15:04")
-// 		}
-// 		tbl.AddRow(f.Code, f.Origin, formattedTime, formattedArrival, formattedExpectedAt, f.Cancelled)
-// 	}
+	flts, err := json.ReadFromJSON("flightData.json")
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	for _, f := range flts {
+		formattedTime := f.DueTime.Format("15:04")
+		var formattedArrival, formattedExpectedAt string
+		if !f.Arrived.IsZero() {
+			formattedArrival = f.Arrived.Format("15:04")
+		}
 
-// 	var buf bytes.Buffer
-// 	tbl.Print(&buf)
-// 	return buf.String()
-// }
+		if !f.ExpectedAt.IsZero() {
+			formattedExpectedAt = f.ExpectedAt.Format("15:04")
+		}
+		tbl.AddRow(f.Code, f.Origin, formattedTime, formattedArrival, formattedExpectedAt, f.Cancelled)
+	}
+
+	var buf bytes.Buffer
+	tbl.Print()
+	return buf.String()
+}
+
+func DisplayAndBoard() {
+	fmt.Println("\n   ", center("Arrivals", 20), "   \n")
+
+	flts, err := json.ReadFromJSON("flightData.json")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	b := NewBoard(flts)
+	displayResult := b.Display()
+	fmt.Println(displayResult)
+
+	a := NewBoard(flts)
+	boardResult := a.Board()
+	fmt.Println(boardResult)
+
+}
