@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-
+	"go_arrivals/board"
 	"go_arrivals/json"
-
-	"github.com/rodaine/table"
 )
 
 func center(s string, w int) string {
@@ -33,27 +31,36 @@ func main() {
 	// myBoard := board.NewBoard(flightSlice)
 	// fmt.Println(myBoard.Display())
 
-	// SETTING UP THE TABLE WITH THE COLUMNS WANTED
-	tbl := table.New("Code", "Origin", "Time")
-
 	// for _, f := range myBoard.Flights {
 	// 	formattedTime := f.DueTime.Format("15:04")
 	// 	tbl.AddRow(f.Code, f.Origin, formattedTime)
 	// }
 
-	// tbl.Print()
-
-	fmt.Println("\nArriving Flights:\n")
+	fmt.Println("\n   ", center("Arrivals", 20), "   \n")
 
 	flts, err := json.ReadFromJSON("flightData.json")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
+	b := board.NewBoard(flts)
+	displayResult := b.Display()
+	fmt.Println(displayResult)
+	// // SETTING UP THE TABLE WITH THE COLUMNS WANTED
+	// tbl := table.New("Code", "Origin", "Time", "Arrived", "Expected", "Cancelled")
 
-	for _, f := range flts {
-		formattedTime := f.DueTime.Format("15:04")
-		tbl.AddRow(f.Code, f.Origin, formattedTime)
-	}
-	tbl.Print()
+	// for _, f := range flts {
+	// 	formattedTime := f.DueTime.Format("15:04")
+	// 	var formattedArrival, formattedExpectedAt string
+	// 	if !f.Arrived.IsZero() {
+	// 		formattedArrival = f.Arrived.Format("15:04")
+	// 	}
+
+	// 	if !f.ExpectedAt.IsZero() {
+	// 		formattedExpectedAt = f.ExpectedAt.Format("15:04")
+	// 	}
+	// 	tbl.AddRow(f.Code, f.Origin, formattedTime, formattedArrival, formattedExpectedAt, f.Cancelled)
+	// }
+
+	// tbl.Print()
 }

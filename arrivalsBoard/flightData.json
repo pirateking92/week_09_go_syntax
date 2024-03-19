@@ -53,7 +53,7 @@
             "to": "London",
             "code": "QR7",
             "scheduled_departure": "2024-03-14T05:45:00Z",
-            "scheduled_arrival": "2024-03-14T13:20:00Z",
+            "scheduled_arrival": "2024-03-14T18:20:00Z",
             "status": {
                 "arrived": "",
                 "cancelled": false,

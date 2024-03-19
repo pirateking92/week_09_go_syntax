@@ -16,6 +16,11 @@ type jsonData struct {
 		Origin           string `json:"from"`
 		Code             string `json:"code"`
 		ScheduledArrival string `json:"scheduled_arrival"` // these are json maps to what they correspond to in the their respective json file
+		Status           struct {
+			Arrived    string `json:"arrived"`
+			ExpectedAt string `json:"expected_at"`
+			Cancelled  bool   `json:"cancelled"`
+		} `json:"status"`
 	} `json:"flights"`
 }
 
@@ -35,7 +40,9 @@ func ReadFromJSON(filePath string) (flights.Flights, error) {
 	var flts flights.Flights
 	for _, f := range data.Flights {
 		ScheduledArrival, _ := time.Parse(time.RFC3339, f.ScheduledArrival)
-		flts = append(flts, flights.NewFlight(f.Code, f.Origin, ScheduledArrival))
+		Arrived, _ := time.Parse(time.RFC3339, f.Status.Arrived)
+		ExpectedAt, _ := time.Parse(time.RFC3339, f.Status.ExpectedAt)
+		flts = append(flts, flights.NewFlight(f.Code, f.Origin, ScheduledArrival, Arrived, ExpectedAt, f.Status.Cancelled))
 	}
 
 	return flts, nil
